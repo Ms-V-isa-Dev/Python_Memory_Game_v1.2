@@ -129,7 +129,7 @@ function fmtTime(s) {
   return `${Math.floor(s/60)}:${(s%60).toString().padStart(2,"0")}`;
 }
 
-/* ─── CARD ─── */
+/* CARD COMPONENT */
 function Card({ card, visible, matchColor, onClick, cardH }) {
   const [hov, setHov] = useState(false);
   const isMatched = !!matchColor;
@@ -193,7 +193,7 @@ function Card({ card, visible, matchColor, onClick, cardH }) {
   );
 }
 
-/* ─── STAT BADGE ─── */
+/* STAT BADGE COMPONENT */
 function StatBadge({ label, value, color }) {
   return (
     <span style={{ color:"#ede4cd", display:"flex", alignItems:"baseline", gap:4 }}>
@@ -203,7 +203,7 @@ function StatBadge({ label, value, color }) {
   );
 }
 
-/* ─── SHARED BUTTON STYLES ─── */
+/* SHARED BUTTON STYLES */
 const btnPrimary = {
   background:"linear-gradient(150deg,#0b4f5c,#147a8f)", border:"2px solid #d4a843",
   borderRadius:10, color:"#fff", padding:"13px 30px", cursor:"pointer",
@@ -215,17 +215,17 @@ const btnGhost = {
   fontSize:17, outline:"none", fontFamily:"'Segoe UI',sans-serif",
 };
 
-/* ══════════════════════════════════════════════════════════
-   APP
-   ══════════════════════════════════════════════════════════ */
+/* ==================================================
+   APP COMPONENT
+   ================================================== */
 export default function App() {
-  /* ── setup (persists across rounds) ── */
+  /* setup (persists across rounds) */
   const [screen,        setScreen]        = useState("start");
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [playerCount,   setPlayerCount]   = useState(1);
   const [playerNames,   setPlayerNames]   = useState(["Player 1","Player 2","Player 3","Player 4"]);
 
-  /* ── active game ── */
+  /* active game state */
   const [level,         setLevel]         = useState(null);
   const [cards,         setCards]         = useState([]);
   const [flipped,       setFlipped]       = useState([]);
@@ -276,7 +276,7 @@ export default function App() {
       const [a, b] = next;
 
       if (cards[a].pair === cards[b].pair) {
-        /* ── match: score point, keep turn ── */
+        /* match: score point, keep turn */
         const nm = { ...matchedBy, [cards[a].pair]: currentPlayer };
         setMatchedBy(nm);
         const ns = [...scores];
@@ -287,7 +287,7 @@ export default function App() {
         if (Object.keys(nm).length === level.pairs)
           setTimeout(() => setScreen("win"), 520);
       } else {
-        /* ── miss: pass turn ── */
+        /* miss: pass turn */
         setTimeout(() => {
           setFlipped([]);
           setLocked(false);
@@ -324,7 +324,7 @@ export default function App() {
     alignItems:"center", justifyContent:"center", padding:32,
   };
 
-  /* ══════════════════ START SCREEN ══════════════════ */
+  /* START SCREEN */
   if (screen === "start") return (
     <div style={shell}>
       <div style={{ textAlign:"center", maxWidth:760 }}>
@@ -337,7 +337,7 @@ export default function App() {
           Test yourself across <strong style={{ color:"#d4a843" }}>90 essential Python concepts</strong>.
         </p>
 
-        {/* ─── DIFFICULTY ─── */}
+        {/* DIFFICULTY SELECTION */}
         <div style={{ color:"#d4a843", fontSize:11, marginTop:32, marginBottom:10, textTransform:"uppercase", letterSpacing:2.8, fontWeight:700, fontFamily:"'Segoe UI',sans-serif" }}>
           Choose Difficulty
         </div>
@@ -363,7 +363,7 @@ export default function App() {
           })}
         </div>
 
-        {/* ─── PLAYER COUNT ─── */}
+        {/* PLAYER COUNT */}
         <div style={{ color:"#d4a843", fontSize:11, marginTop:30, marginBottom:10, textTransform:"uppercase", letterSpacing:2.8, fontWeight:700, fontFamily:"'Segoe UI',sans-serif" }}>
           Players / Teams
         </div>
@@ -386,7 +386,7 @@ export default function App() {
           })}
         </div>
 
-        {/* ─── PLAYER NAMES ─── */}
+        {/* PLAYER NAMES */}
         <div style={{ display:"flex", gap:10, justifyContent:"center", flexWrap:"wrap", marginTop:16 }}>
           {Array.from({ length: playerCount }, (_, i) => (
             <div key={i} style={{ display:"flex", alignItems:"stretch" }}>
@@ -413,7 +413,7 @@ export default function App() {
           ))}
         </div>
 
-        {/* ─── START BUTTON ─── */}
+        {/* START BUTTON */}
         <button
           onClick={launchGame}
           disabled={!selectedLevel}
@@ -440,7 +440,7 @@ export default function App() {
     </div>
   );
 
-  /* ══════════════════ WIN SCREEN ══════════════════ */
+  /* WIN SCREEN */
   if (screen === "win") {
     const maxScore  = Math.max(...scores.slice(0, playerCount));
     const sorted    = Array.from({ length: playerCount }, (_, i) => ({ i, name: playerNames[i], score: scores[i] }))
@@ -463,14 +463,14 @@ export default function App() {
           <div style={{ fontSize:76 }}>🎉</div>
           <h1 style={{ color:"#d4a843", fontSize:42, margin:"14px 0 6px", fontWeight:800 }}>{titleText}</h1>
 
-          {/* ── solo rating ── */}
+          {/* solo rating */}
           {isSolo && (
             <div style={{ color: ratingColor, fontSize:22, fontWeight:700, fontFamily:"'Segoe UI',sans-serif", marginBottom:16 }}>
               {emoji} {label}
             </div>
           )}
 
-          {/* ── leaderboard (always shown) ── */}
+          {/* leaderboard (always shown) */}
           <div style={{ display:"flex", flexDirection:"column", gap:9, alignItems:"center", marginTop: isSolo ? 4 : 20 }}>
             {sorted.map((p, rank) => {
               const isWin = p.score === maxScore;
@@ -496,7 +496,7 @@ export default function App() {
             })}
           </div>
 
-          {/* ── time row ── */}
+          {/* time row */}
           <div style={{ display:"flex", gap:44, justifyContent:"center", marginTop:24 }}>
             {isSolo && (
               <div>
@@ -510,7 +510,7 @@ export default function App() {
             </div>
           </div>
 
-          {/* ── buttons ── */}
+          {/* buttons */}
           <div style={{ display:"flex", gap:14, marginTop:30, justifyContent:"center" }}>
             <button onClick={launchGame} style={btnPrimary}>🔄 Play Again</button>
             <button onClick={() => setScreen("start")} style={btnGhost}>Menu</button>
@@ -520,11 +520,11 @@ export default function App() {
     );
   }
 
-  /* ══════════════════ GAME SCREEN ══════════════════ */
+  /* GAME SCREEN */
   return (
     <div style={{ minHeight:"100vh", background:"#0e1b35", fontFamily:"'Segoe UI',system-ui,sans-serif", padding:"16px 18px 30px" }}>
 
-      {/* ─── SCOREBOARD ─── */}
+      {/* SCOREBOARD */}
       <div style={{ maxWidth:940, margin:"0 auto 6px" }}>
         {/* player chips */}
         <div style={{ display:"flex", gap:8, justifyContent:"center", flexWrap:"wrap", marginBottom:10 }}>
@@ -574,12 +574,12 @@ export default function App() {
         </div>
       </div>
 
-      {/* ─── PROGRESS BAR ─── */}
+      {/* PROGRESS BAR */}
       <div style={{ maxWidth:940, margin:"0 auto 14px", height:5, background:"#1e3555", borderRadius:3, overflow:"hidden" }}>
         <div style={{ height:"100%", width:`${(matchedCount/level.pairs)*100}%`, background:"linear-gradient(90deg, #147a8f, #4ade80)", transition:"width 0.4s ease", borderRadius:3 }} />
       </div>
 
-      {/* ─── CARD GRID ─── */}
+      {/* CARD GRID */}
       <div style={{ display:"grid", gridTemplateColumns:`repeat(${level.cols}, 1fr)`, gap:10, maxWidth:940, margin:"0 auto" }}>
         {cards.map((card, i) => {
           const isMatched = card.pair in matchedBy;
